@@ -27,7 +27,7 @@ class Search extends Component {
 
         this.state = {
             data: [],
-            page: 1,
+            page: null,
             isLoading: false,
         };
     }
@@ -41,7 +41,7 @@ class Search extends Component {
             return;
         }
 
-        this.fetchStories(value, 1);
+        this.fetchStories(value, 1 );
     }
 
     onPaginatedSearch = (e) =>
@@ -49,9 +49,10 @@ class Search extends Component {
 
     fetchStories = (value, page) => {
         this.setState({ isLoading: true });
+        this.setState({ page: page});
         axios.get(getNews(value, page))
             .then(response => {
-                //console.log("data beforeis ", this.state.data);
+                //console.log("data before is ", this.state.data);
 
                 this.setState({data: response.data.articles});
                 //console.log("data is ", this.state.data);
