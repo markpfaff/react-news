@@ -15,9 +15,7 @@ class App extends Component {
         <div className="App-intro">
             <h4>Powered by<a href="https://newsapi.org/"> News API </a></h4>
         </div>
-          <Search default="abc-news"/>
-
-
+        <Search default="abc-news"/>
       </div>
     );
   }

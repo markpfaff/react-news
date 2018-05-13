@@ -1,25 +1,25 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import List from './List'
+
 //import Suggestions from './Suggestions'
 
 
-const applyUpdateResult = (result) => (prevState) => ({
-    hits: [...prevState.hits, ...result.hits],
-    page: result.page,
+const applyUpdateResult = (response) => (prevState) => ({
+    data: [...prevState.data, ...response.data.articles],
+    isLoading: false,
 });
 
-const applySetResult = (result) => (prevState) => ({
-    hits: result.hits,
-    page: result.page,
+const applySetResult = (response) => (prevState) => ({
+    data: response.data.articles,
+    isLoading: false,
 });
-
 
 
 const API_KEY = process.env.REACT_APP_NEWS_API_KEY;
 
 const getNews = (value, page) =>
-    `https://newsapi.org/v2/everything?q=${value}&page=${page}&apiKey=${API_KEY}`;
-
+    `https://newsapi.org/v2/everything?q=${value}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`;
 
 class Search extends Component {
     constructor(props) {
@@ -27,7 +27,8 @@ class Search extends Component {
 
         this.state = {
             data: [],
-            page: null
+            page: 1,
+            isLoading: false,
         };
     }
 
@@ -43,15 +44,21 @@ class Search extends Component {
         this.fetchStories(value, 1);
     }
 
+    onPaginatedSearch = (e) =>
+        this.fetchStories(this.input.value, this.state.page + 1);
+
     fetchStories = (value, page) => {
+        this.setState({ isLoading: true });
         axios.get(getNews(value, page))
-            .then(res => {
+            .then(response => {
                 //console.log("data beforeis ", this.state.data);
 
-                this.setState({data: res.data.articles});
+                this.setState({data: response.data.articles});
                 //console.log("data is ", this.state.data);
                 //console.log("data is set to", res.data.articles);
-
+                this.onSetResult(response, page);
+                console.log("api call is ", getNews(value, page));
+                console.log("this.state.page inside is ", this.state.page);
             })
             //.then(result => this.onSetResult(result, page))
             .catch((error) => {
@@ -75,15 +82,15 @@ class Search extends Component {
             })
     }
 
-    onSetResult = (result, page) =>
+    onSetResult = (response, page) =>
         page === 1
-            ? this.setState(applySetResult(result))
-            : this.setState(applyUpdateResult(result));
+            ? this.setState(applySetResult(response))
+            : this.setState(applyUpdateResult(response));
 
     render() {
         return (
             <div className="page">
-                <div className="interactions">
+                <div className="App-search">
                     <form type="submit" onSubmit={this.onInitialSearch}>
                         <input type="text" ref={node => this.input = node} />
                         <button type="submit">Search</button>
@@ -92,25 +99,30 @@ class Search extends Component {
 
                 <List
                     list={this.state.data}
-
+                    isLoading={this.state.isLoading}
+                    page={this.state.page}
+                    onPaginatedSearch={this.onPaginatedSearch}
                 />
+
+                <div className="interactions">
+                    {this.state.isLoading && <span>Loading...</span>}
+                </div>
+                <div className="interactions">
+                    {
+                        (this.state.page !== null && !this.state.isLoading) &&
+                        <button
+                            type="button"
+                            onClick={this.onPaginatedSearch}
+                        >
+                            More
+                        </button>
+                    }
+                </div>
+
             </div>
         );
     }
 }
 
-
-const List = ({ list }) =>
-    <div className="list">
-        {list.map(item =>
-            <div className="list-row" key={item.index}>
-                <a href={item.url}>
-                    <h4>{item.title}</h4>
-                    <p>{item.description}</p>
-                    <img src={item.urlToImage} alt={item.title}/>
-                </a>
-            </div>
-        )}
-    </div>
 
 export default Search
