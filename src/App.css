@@ -8,14 +8,27 @@
 }
 
 .App-header {
-  background-color: #222;
-  height: 200px;
-  padding: 20px;
-  color: white;
+  height: 30px;
+  padding: 5px 20px;
+  color: #000000;
+    text-align:left;
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 15px;
 }
 
 .App-title {
-  font-size: 1.5em;
+    font-size: 1.25em;
+}
+
+.App-title, .subtitle {
+    float:left;
+    margin-bottom: 5px;
+    margin-right:5px;
+}
+
+.subtitle {
+  font-size: .75em;
 }
 
 .App-intro {
@@ -23,7 +36,9 @@
 }
 
 .App-search {
-    padding-bottom: 30px;
+    padding-bottom: 15px;
+    padding-left: 20px;
+    text-align: left;
 }
 
 @keyframes App-logo-spin {
