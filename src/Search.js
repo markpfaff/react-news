@@ -46,10 +46,10 @@ const applySetResult = (response) => (prevState) => ({
 
 const API_KEY = process.env.REACT_APP_NEWS_API_KEY;
 
-const getNews = (value, page, domains) =>
-    (typeof domains === "undefined"
-        ? `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`
-        : `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}&domains=${domains}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`);
+// const getNews = (value, page) =>
+//     (typeof this.state.domains === "undefined"
+//         ? `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`
+//         : `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}&domains=${this.state.domains}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`);
 
 class Search extends Component {
     constructor(props) {
@@ -59,74 +59,81 @@ class Search extends Component {
             data: [],
             page: null,
             isLoading: false,
-            bias: '',
-            domains:'',
+            inputValue: '',
+            domains:'msnbc,the-huffington-post,vice-news',
         };
     }
 
+    getNews = (value, page) =>
+        (typeof this.state.domains === "undefined"
+            ? `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`
+            : `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}&sources=${this.state.domains}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`);
+
     onInitialSearch = (e) => {
         e.preventDefault();
+        //const { value } = this.input;
 
-        const { value } = this.input;
+        //console.log("contst value is", value);
 
-        if (value === '') {
-            return;
-        }
+        //  this.setState({ inputValue : this.input}), function () {
+        //     console.log("inputValue  is ",this.state.inputValue);
+        // };
+        console.log("inputValue  is ",this.state.inputValue);
 
-        this.fetchStories(value, 1 );
+
+        // if (value === '') {
+        //     return;
+        // }
+        //console.log("value in oninitialsearch is", this.inputValue)
+
+        this.fetchStories(this.state.inputValue, 1 );
     }
 
-    setDomain = (bias) => {
-        console.log('setDomain has run');
-        switch(bias) {
-            case "far-left":
-                this.domains = "msnbc,the-huffington-post,vice-news";
-                console.log('setDomain: far left');
-                console.log('this.domains is: ',this.domains);
+    // setDomain = (tab) => {
+    //     console.log('setDomain has run');
+    //     if(tab ==="far-left") {
+    //         this.domains = "msnbc,the-huffington-post,vice-news";
+    //         console.log('setDomain: Far Left');
+    //         console.log('this.domains is: ',this.domains);
+    //     }else if(tab ==="left"){
+    //         this.domains = "buzzfeed,cnn,the-guardian-uk,the-washington-post,the-new-york-times,axios,politico,mashable,nbc-news,new-york-magazine,newsweek,the-verge";
+    //         console.log('setDomain: left');
+    //         console.log('this.domains is: ',this.domains);
+    //     }else if(tab ==="moderate"){
+    //         this.domains = "associated-press,reuters,bloomberg,abc-news,cbs-news,bbc-news,usa-today,time,al-jazeera-english,business-insider,cnbc";
+    //         console.log('setDomain: moderate');
+    //         console.log('this.domains is: ',this.domains);
+    //     }else if(tab ==="right"){
+    //         this.domains = "the-economist,the-hill,the-wall-street-journal,national-review,the-washington-times,the-telegraph";
+    //         console.log('setDomain:  right');
+    //         console.log('this.domains is: ',this.domains);
+    //     }else if(tab === "far-right"){
+    //         this.domains = "the-american-conservative,fox-news,breitbart-news,daily-mail";
+    //         console.log('setDomain: far right');
+    //         console.log('this.domains is: ',this.domains);
+    //     }else {
+    //         this.domains = "";
+    //     }
+    //     //this.fetchStories(this.state.value, 1 );
+    //
+    // }
 
-                break;
-            case "left":
-                this.domains = "buzzfeed,cnn,the-guardian-uk,the-washington-post,the-new-york-times,axios,politico,mashable,nbc-news,new-york-magazine,newsweek,the-verge";
-                console.log('setDomain: left');
-                console.log('this.domains is: ',this.domains);
+    handleActive = (tab) => {
+            if(tab==="far-left")
 
-
-                break;
-            case "moderate":
-                this.domains = "associated-press,reuters,bloomberg,abc-news,cbs-news,bbc-news,usa-today,time,al-jazeera-english,business-insider,cnbc";
-                console.log('setDomain: moderate');
-                console.log('this.domains is: ',this.domains);
-
-
-                break;
-            case "right":
-                this.domains = "the-economist,the-hill,the-wall-street-journal,national-review,the-washington-times,the-telegraph";
-                console.log('setDomain:  right');
-                console.log('this.domains is: ',this.domains);
-
-
-                break;
-            case "far-right":
-                this.domains = "the-american-conservative,fox-news,breitbart-news,daily-mail";
-                console.log('setDomain: far right');
-                console.log('this.domains is: ',this.domains);
-
-
-                break;
-            default:
-                this.domains = "";
-        }
-
+                console.log('domains is set to state:', this.state.domains);
+            console.log('setDomain: Far Left');
     }
 
-    onPaginatedSearch = (e) =>
-        this.fetchStories(this.input.value, this.state.page + 1, this.state.bias);
+    onPaginatedSearch = (e) => {
+        this.fetchStories(this.input.value, this.state.page + 1);
+    }
 
     fetchStories = (value, page) => {
         this.setState({ isLoading: true });
         this.setState({ page: page});
-
-        axios.get(getNews(value, page, this.state.domains))
+        console.log("::::this.domains inside fetchStories is ",this.state.domains);
+        axios.get(this.getNews(value, page))
             .then(response => {
                 console.log("data before is ", this.state.data);
 
@@ -134,7 +141,7 @@ class Search extends Component {
                 console.log("data is ", this.state.data);
                 console.log("data is set to", response.data.articles);
                 this.onSetResult(response, page);
-                console.log("api call is ", getNews(value, page));
+                console.log("api call is ", this.getNews(value, page));
                 console.log("this.state.page inside is ", this.state.page);
             })
             //.then(result => this.onSetResult(result, page))
@@ -156,6 +163,7 @@ class Search extends Component {
                     console.log("request setup error code is ", error.message);
                 }
                 console.log("general error code is ", error.config);
+
             })
     }
 
@@ -170,7 +178,10 @@ class Search extends Component {
                 <div className="page">
                     <div className="App-search">
                         <form type="submit" onSubmit={this.onInitialSearch}>
-                            <input type="text" ref={node => this.input = node} />
+                            {/*<input type="text" ref={node => this.input = node} />*/}
+                            <input type="text" onChange={(e) => this.setState({inputValue: e.target.value})} value={this.state.inputValue} />
+
+
                             <button type="submit">Search</button>
                         </form>
                     </div>
@@ -206,7 +217,7 @@ class Search extends Component {
                                 </div>
                             </div>
                         </Tab>
-                        <Tab onSelect={this.setDomain('far-left')} label="Far Left" >
+                        <Tab onActive={this.handleActive('far-left')} label="Far Left" >
                             <div>
                                 <List
                                     list={this.state.data}
@@ -231,7 +242,7 @@ class Search extends Component {
                                 </div>
                             </div>
                         </Tab>
-                        <Tab onSelect={this.setDomain('left')} label="Left" >
+                        <Tab label="Left" >
                             <div>
                                 <List
                                     list={this.state.data}
@@ -256,7 +267,7 @@ class Search extends Component {
                                 </div>
                             </div>
                         </Tab>
-                        <Tab onSelect={this.setDomain('moderate')} label="Moderate" >
+                        <Tab  label="Moderate" >
                             <div>
                                 <List
                                     list={this.state.data}
@@ -281,7 +292,7 @@ class Search extends Component {
                                 </div>
                             </div>
                         </Tab>
-                        <Tab  onSelect={this.setDomain('right')} label="Right">
+                        <Tab   label="Right">
                             <div>
                                 <List
                                     list={this.state.data}
@@ -306,7 +317,7 @@ class Search extends Component {
                                 </div>
                             </div>
                         </Tab>
-                        <Tab onSelect={this.setDomain('far-right') } label="Far Right">
+                        <Tab  label="Far Right">
                             <div>
                                 <List
                                     list={this.state.data}
