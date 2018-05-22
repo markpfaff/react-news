@@ -60,33 +60,68 @@ class Search extends Component {
             page: null,
             isLoading: false,
             inputValue: '',
-            domains:'msnbc,the-huffington-post,vice-news',
+            domains:'',
+            tabValue:'all',
         };
     }
 
-    getNews = (value, page) =>
-        (typeof this.state.domains === "undefined"
-            ? `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`
-            : `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}&sources=${this.state.domains}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`);
+    getNews = (value, page) => {
+        var sources = '';
 
-    onInitialSearch = (e) => {
+        switch(this.state.tabValue) {
+            case "far-left":
+                sources = "&sources=msnbc,the-huffington-post,vice-news";
+                break;
+            case "left":
+                sources = "&sources=buzzfeed,cnn,the-guardian-uk,the-washington-post,the-new-york-times,axios,politico,mashable,nbc-news,new-york-magazine,newsweek,the-verge";
+                break;
+            case "moderate":
+                sources = "&sources=associated-press,reuters,bloomberg,abc-news,cbs-news,bbc-news,usa-today,time,al-jazeera-english,business-insider,cnbc";
+                break;
+            case "right":
+                sources = "&sources=the-economist,the-hill,the-wall-street-journal,national-review,the-washington-times,the-telegraph";
+                break;
+            case "far-right":
+                sources = "&sources=the-american-conservative,fox-news,breitbart-news,daily-mail";
+                break;
+            default:
+                sources = "";
+        }
+
+        return  `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}${sources}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`;
+
+
+    }
+
+    onInitialSearch = (e,bias) => {
         e.preventDefault();
         //const { value } = this.input;
 
-        //console.log("contst value is", value);
+        console.log("oninitialsearchhasrun");
 
         //  this.setState({ inputValue : this.input}), function () {
         //     console.log("inputValue  is ",this.state.inputValue);
         // };
         console.log("inputValue  is ",this.state.inputValue);
-
+if(bias ==='far-left') this.setState({domains:'far-left'});
 
         // if (value === '') {
         //     return;
         // }
         //console.log("value in oninitialsearch is", this.inputValue)
 
-        this.fetchStories(this.state.inputValue, 1 );
+        this.fetchStories(this.state.inputValue, 1);
+    }
+
+    onTabSearch = (tab) => {
+
+        console.log("ontabsearchhasrun");
+
+        if(tab.props['value'] ==='far-left') this.setState({domains:'far-left'});
+
+        //console.log("state.domains inside onTabSearch is", this.state.domains);
+
+        //this.fetchStories(this.state.inputValue, 1);
     }
 
     // setDomain = (tab) => {
@@ -121,18 +156,30 @@ class Search extends Component {
     handleActive = (tab) => {
             if(tab==="far-left")
 
-                console.log('domains is set to state:', this.state.domains);
+                //console.log('domains is set to state:', this.state.domains);
             console.log('setDomain: Far Left');
     }
 
+    handleChange = (value) => {
+        this.setState({
+            tabValue: value,
+        });
+        console.log('handleChange has run, tabValue is', this.state.tabValue)
+        this.fetchStories(this.state.inputValue, this.state.page + 1);
+        console.log('tabValue fetchstories has run');
+
+    };
+
     onPaginatedSearch = (e) => {
-        this.fetchStories(this.input.value, this.state.page + 1);
+        this.fetchStories(this.state.inputValue, this.state.page + 1);
     }
 
     fetchStories = (value, page) => {
         this.setState({ isLoading: true });
         this.setState({ page: page});
-        console.log("::::this.domains inside fetchStories is ",this.state.domains);
+        console.log('tabValue inside fetchstories is ', this.state.tabValue);
+
+        //console.log("::::this.domains inside fetchStories is ",this.state.domains);
         axios.get(this.getNews(value, page))
             .then(response => {
                 console.log("data before is ", this.state.data);
@@ -178,15 +225,17 @@ class Search extends Component {
                 <div className="page">
                     <div className="App-search">
                         <form type="submit" onSubmit={this.onInitialSearch}>
-                            {/*<input type="text" ref={node => this.input = node} />*/}
                             <input type="text" onChange={(e) => this.setState({inputValue: e.target.value})} value={this.state.inputValue} />
 
 
                             <button type="submit">Search</button>
                         </form>
                     </div>
-                    <Tabs>
-                        <Tab label="All">
+                    <Tabs
+                        value={this.state.value}
+                        onChange={this.handleChange}
+                    >
+                        <Tab label="All" value='all'>
                             <div>
                                 <List
                                     list={this.state.data}
@@ -217,7 +266,7 @@ class Search extends Component {
                                 </div>
                             </div>
                         </Tab>
-                        <Tab onActive={this.handleActive('far-left')} label="Far Left" >
+                        <Tab value='far-left' label="Far Left" >
                             <div>
                                 <List
                                     list={this.state.data}
@@ -242,7 +291,7 @@ class Search extends Component {
                                 </div>
                             </div>
                         </Tab>
-                        <Tab label="Left" >
+                        <Tab label="Left" value='left' >
                             <div>
                                 <List
                                     list={this.state.data}
@@ -267,7 +316,7 @@ class Search extends Component {
                                 </div>
                             </div>
                         </Tab>
-                        <Tab  label="Moderate" >
+                        <Tab  label="Moderate" value='moderate' >
                             <div>
                                 <List
                                     list={this.state.data}
@@ -292,7 +341,7 @@ class Search extends Component {
                                 </div>
                             </div>
                         </Tab>
-                        <Tab   label="Right">
+                        <Tab   label="Right" value='right' >
                             <div>
                                 <List
                                     list={this.state.data}
@@ -317,7 +366,7 @@ class Search extends Component {
                                 </div>
                             </div>
                         </Tab>
-                        <Tab  label="Far Right">
+                        <Tab  label="Far Right" value='far-right' >
                             <div>
                                 <List
                                     list={this.state.data}
