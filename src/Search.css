@@ -1,0 +1,78 @@
+@keyframes Loading-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/*.all{ background: #f5f5f5;}*/
+
+/*.far-left {background: rgba(229, 233, 255, 0.69)*/
+/*}*/
+
+/*.left {background: rgba(233, 220, 255, 0.54)*/
+/*}*/
+
+/*.center{background: rgba(251, 225, 255, 0.5)*/
+/*}*/
+
+/*.right {background: rgba(255, 56, 223, 0.08)*/
+/*}*/
+
+/*.far-right {background: rgba(255, 43, 59, 0.06)*/
+/*}*/
+
+
+.article-content a {
+    text-decoration: none;
+}
+
+.all .article-source {
+    background: none;
+    color: #000000;
+}
+
+.all .article-content a h4 {
+    color: #000000;
+}
+
+.far-left .article-source {
+    background: #263ebf;
+}
+
+.all .article-content a h4 {
+    color: #263ebf;
+}
+
+.left .article-source {
+    background: #673ab7;
+
+}
+
+.left .article-content a h4 {
+    color: #673ab7;
+}
+
+.center .article-source {
+    background: #9c27b0;
+}
+
+.center .article-content a h4 {
+    color: #9c27b0;
+}
+
+.right .article-source {
+    background: #b73a5d;
+}
+
+.right .article-content a h4 {
+    color: #b73a5d;
+}
+
+.far-right .article-source {
+    background: #e42424;
+
+}
+
+
+.far-right .article-content a h4 {
+    color: #e42424;
+}

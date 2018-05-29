@@ -7,13 +7,13 @@
   height: 80px;
 }
 
+
+
 .App-header {
   height: 30px;
   padding: 5px 20px;
   color: #000000;
     text-align:left;
-    display: flex;
-    align-items: baseline;
     margin-bottom: 15px;
 }
 
@@ -21,14 +21,21 @@
     font-size: 1.25em;
 }
 
-.App-title, .subtitle {
+.App-title {
     float:left;
     margin-bottom: 5px;
     margin-right:5px;
 }
 
+.subtitle-container {
+    float:right;
+    margin-top: 15px;
+
+}
+
 .subtitle {
-  font-size: .75em;
+    font-size: .75em;
+    float:right;
 }
 
 .App-intro {
@@ -36,9 +43,16 @@
 }
 
 .App-search {
-    padding-bottom: 15px;
-    padding-left: 20px;
+    float: left;
+    padding: 15px;
     text-align: left;
+}
+
+.App-bar {
+    height:30px;
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 10px;
 }
 
 @keyframes App-logo-spin {
@@ -65,19 +79,37 @@ img {
     width: 30%;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
+    padding-top:15px;
 }
 
 .article-content {
     width: 70%;
     text-align:left;
+    padding-top: 15px;
+
 }
 
 .article-meta {
     display: flex;
 }
 
-.article-author {
+.article-author,
+.article-source {
     margin-right: 10px;
+}
+
+.article-source {
+    width: 140px;
+    margin-left: 10px;
+    text-align: center;
+    padding: 5px;
+    font-style: normal !important;
+    color: white;
+}
+
+.articlesContainer.all .article-source {
+    color: #000000;
 }
 
 /*.articlesContainer {*/
@@ -144,3 +176,4 @@ img {
     /*align-items: center;*/
   /*}*/
 /*}*/
+

@@ -1,32 +1,11 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import List from './List'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import { deepOrange500 } from 'material-ui/styles/colors'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import {Tabs, Tab} from 'material-ui/Tabs'
+import {Tabs,Tab} from 'material-ui/Tabs'
 import 'typeface-roboto'
 import Ionicon from 'react-ionicons'
-import querystring from 'querystring'
-
-
-//import Suggestions from './Suggestions'
-
-// Theme
-const muiTheme = getMuiTheme({
-    palette: {
-        accent1Color: deepOrange500
-    }
-})
-
-const styles = {
-    headline: {
-        fontSize: 24,
-        paddingTop: 16,
-        marginBottom: 12,
-        fontWeight: 400,
-    },
-};
+import './Search.css'
+import TextField from 'material-ui/TextField';
 
 const applyUpdateResult = (response) => (prevState) => ({
     data: [...prevState.data, ...response.data.articles],
@@ -38,18 +17,33 @@ const applySetResult = (response) => (prevState) => ({
     isLoading: false,
 });
 
+const all = {
+    background: '#f5f5f5',
+    color: '#000000'
+};
 
-// const applybias = (bias, domains) => (prevState) => ({
-//     data: response.data.articles,
-//
-// });
+const farLeft = {
+    background: '#263ebf',
+    color: '#ffffff'
+};
+const left = {
+    background: '#673ab7',
+    color: '#ffffff'
+};
+const center = {
+    background: '#9c27b0',
+    color: '#ffffff'
+};
+const right  ={
+    background: '#b73a5d',
+    color: '#ffffff'
+};
+const farRight ={
+    background: '#e42424',
+    color: '#ffffff'
+};
 
 const API_KEY = process.env.REACT_APP_NEWS_API_KEY;
-
-// const getNews = (value, page) =>
-//     (typeof this.state.domains === "undefined"
-//         ? `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`
-//         : `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}&domains=${this.state.domains}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`);
 
 class Search extends Component {
     constructor(props) {
@@ -59,7 +53,7 @@ class Search extends Component {
             data: [],
             page: null,
             isLoading: false,
-            inputValue: '',
+            inputValue: 'Bitcoin',
             domains:'',
             tabValue:'all',
         };
@@ -75,7 +69,7 @@ class Search extends Component {
             case "left":
                 sources = "&sources=buzzfeed,cnn,the-guardian-uk,the-washington-post,the-new-york-times,axios,politico,mashable,nbc-news,new-york-magazine,newsweek,the-verge";
                 break;
-            case "moderate":
+            case "center":
                 sources = "&sources=associated-press,reuters,bloomberg,abc-news,cbs-news,bbc-news,usa-today,time,al-jazeera-english,business-insider,cnbc";
                 break;
             case "right":
@@ -93,72 +87,11 @@ class Search extends Component {
 
     }
 
-    onInitialSearch = (e,bias) => {
+    onInitialSearch = (e) => {
         e.preventDefault();
-        //const { value } = this.input;
-
-        console.log("oninitialsearchhasrun");
-
-        //  this.setState({ inputValue : this.input}), function () {
-        //     console.log("inputValue  is ",this.state.inputValue);
-        // };
-        console.log("inputValue  is ",this.state.inputValue);
-if(bias ==='far-left') this.setState({domains:'far-left'});
-
-        // if (value === '') {
-        //     return;
-        // }
-        //console.log("value in oninitialsearch is", this.inputValue)
-
         this.fetchStories(this.state.inputValue, 1);
     }
 
-    onTabSearch = (tab) => {
-
-        console.log("ontabsearchhasrun");
-
-        if(tab.props['value'] ==='far-left') this.setState({domains:'far-left'});
-
-        //console.log("state.domains inside onTabSearch is", this.state.domains);
-
-        //this.fetchStories(this.state.inputValue, 1);
-    }
-
-    // setDomain = (tab) => {
-    //     console.log('setDomain has run');
-    //     if(tab ==="far-left") {
-    //         this.domains = "msnbc,the-huffington-post,vice-news";
-    //         console.log('setDomain: Far Left');
-    //         console.log('this.domains is: ',this.domains);
-    //     }else if(tab ==="left"){
-    //         this.domains = "buzzfeed,cnn,the-guardian-uk,the-washington-post,the-new-york-times,axios,politico,mashable,nbc-news,new-york-magazine,newsweek,the-verge";
-    //         console.log('setDomain: left');
-    //         console.log('this.domains is: ',this.domains);
-    //     }else if(tab ==="moderate"){
-    //         this.domains = "associated-press,reuters,bloomberg,abc-news,cbs-news,bbc-news,usa-today,time,al-jazeera-english,business-insider,cnbc";
-    //         console.log('setDomain: moderate');
-    //         console.log('this.domains is: ',this.domains);
-    //     }else if(tab ==="right"){
-    //         this.domains = "the-economist,the-hill,the-wall-street-journal,national-review,the-washington-times,the-telegraph";
-    //         console.log('setDomain:  right');
-    //         console.log('this.domains is: ',this.domains);
-    //     }else if(tab === "far-right"){
-    //         this.domains = "the-american-conservative,fox-news,breitbart-news,daily-mail";
-    //         console.log('setDomain: far right');
-    //         console.log('this.domains is: ',this.domains);
-    //     }else {
-    //         this.domains = "";
-    //     }
-    //     //this.fetchStories(this.state.value, 1 );
-    //
-    // }
-
-    handleActive = (tab) => {
-            if(tab==="far-left")
-
-                //console.log('domains is set to state:', this.state.domains);
-            console.log('setDomain: Far Left');
-    }
 
     handleChange = (value) => {
         this.setState({
@@ -214,6 +147,7 @@ if(bias ==='far-left') this.setState({domains:'far-left'});
             })
     }
 
+
     onSetResult = (response, page) =>
         page === 1
             ? this.setState(applySetResult(response))
@@ -221,38 +155,40 @@ if(bias ==='far-left') this.setState({domains:'far-left'});
 
     render() {
         return (
-            <MuiThemeProvider muiTheme={muiTheme}>
                 <div className="page">
-                    <div className="App-search">
-                        <form type="submit" onSubmit={this.onInitialSearch}>
-                            <input type="text" onChange={(e) => this.setState({inputValue: e.target.value})} value={this.state.inputValue} />
+                    <header className="App-header">
+                        {/*<AppBarMenu />*/}
+                        {/*<img src={logo} className="App-logo" alt="logo" />*/}
+                            <h1 className="App-title">Spectrum</h1>
+                            <div className="App-search">
+                                <form type="submit" onSubmit={this.onInitialSearch}>
+                                    <input type="text" onChange={(e) => this.setState({inputValue: e.target.value})} value={this.state.inputValue} />
+                                    <button type="submit">Search</button>
+                                </form>
+                            </div>
+                        <div className="subtitle-container">
+                            <span className="subtitle">Created by Mark Pfaff, Powered by<a href="https://newsapi.org/"> News API </a></span>
+                        </div>
+                    </header>
 
-
-                            <button type="submit">Search</button>
-                        </form>
-                    </div>
                     <Tabs
                         value={this.state.value}
                         onChange={this.handleChange}
+
                     >
-                        <Tab label="All" value='all'>
+                        <Tab style={all} label="All" value='all'>
                             <div>
-                                <List
-                                    list={this.state.data}
-                                    isLoading={this.state.isLoading}
-                                    page={this.state.page}
-                                    onPaginatedSearch={this.onPaginatedSearch}
-                                />
-
-                                <div className="interactions">
-
-                                    {this.state.isLoading &&
-                                    <span>Loading...</span>
-                                    }
                                     {this.state.isLoading &&
                                     <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
                                     }
-                                </div>
+                                <List
+                                    list={this.state.data}
+                                    isLoading={this.state.isLoading}
+                                    page={this.state.page}
+                                    onPaginatedSearch={this.onPaginatedSearch}
+                                    className="all"
+                                />
+
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
@@ -266,18 +202,21 @@ if(bias ==='far-left') this.setState({domains:'far-left'});
                                 </div>
                             </div>
                         </Tab>
-                        <Tab value='far-left' label="Far Left" >
+                        <Tab style={farLeft} value='far-left' label="Far Left" >
                             <div>
+
+                                {this.state.isLoading &&
+                                <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
+                                }
                                 <List
                                     list={this.state.data}
                                     isLoading={this.state.isLoading}
                                     page={this.state.page}
                                     onPaginatedSearch={this.onPaginatedSearch}
+                                    className="far-left"
+
                                 />
 
-                                <div className="interactions">
-                                    {this.state.isLoading && <span>Loading...</span>}
-                                </div>
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
@@ -291,18 +230,21 @@ if(bias ==='far-left') this.setState({domains:'far-left'});
                                 </div>
                             </div>
                         </Tab>
-                        <Tab label="Left" value='left' >
+                        <Tab style={left} label="Left" value='left' >
                             <div>
+
+                                {this.state.isLoading &&
+                                <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
+                                }
                                 <List
                                     list={this.state.data}
                                     isLoading={this.state.isLoading}
                                     page={this.state.page}
                                     onPaginatedSearch={this.onPaginatedSearch}
+                                    className="left"
                                 />
 
-                                <div className="interactions">
-                                    {this.state.isLoading && <span>Loading...</span>}
-                                </div>
+
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
@@ -316,18 +258,20 @@ if(bias ==='far-left') this.setState({domains:'far-left'});
                                 </div>
                             </div>
                         </Tab>
-                        <Tab  label="Moderate" value='moderate' >
+                        <Tab style={center} label="center" value='center' >
                             <div>
+
+                                {this.state.isLoading &&
+                                <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
+                                }
                                 <List
                                     list={this.state.data}
                                     isLoading={this.state.isLoading}
                                     page={this.state.page}
                                     onPaginatedSearch={this.onPaginatedSearch}
+                                    className="center"
                                 />
 
-                                <div className="interactions">
-                                    {this.state.isLoading && <span>Loading...</span>}
-                                </div>
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
@@ -341,18 +285,20 @@ if(bias ==='far-left') this.setState({domains:'far-left'});
                                 </div>
                             </div>
                         </Tab>
-                        <Tab   label="Right" value='right' >
+                        <Tab style={right} label="Right" value='right' >
                             <div>
+
+                                {this.state.isLoading &&
+                                <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
+                                }
                                 <List
                                     list={this.state.data}
                                     isLoading={this.state.isLoading}
                                     page={this.state.page}
                                     onPaginatedSearch={this.onPaginatedSearch}
+                                    className="right"
                                 />
 
-                                <div className="interactions">
-                                    {this.state.isLoading && <span>Loading...</span>}
-                                </div>
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
@@ -366,18 +312,20 @@ if(bias ==='far-left') this.setState({domains:'far-left'});
                                 </div>
                             </div>
                         </Tab>
-                        <Tab  label="Far Right" value='far-right' >
+                        <Tab style={farRight} label="Far Right" value='far-right' >
                             <div>
+
+                                {this.state.isLoading &&
+                                <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
+                                }
                                 <List
                                     list={this.state.data}
                                     isLoading={this.state.isLoading}
                                     page={this.state.page}
                                     onPaginatedSearch={this.onPaginatedSearch}
+                                    className="far-right"
                                 />
 
-                                <div className="interactions">
-                                    {this.state.isLoading && <span>Loading...</span>}
-                                </div>
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
@@ -393,7 +341,6 @@ if(bias ==='far-left') this.setState({domains:'far-left'});
                         </Tab>
                     </Tabs>
                 </div>
-            </MuiThemeProvider>
         );
     }
 }

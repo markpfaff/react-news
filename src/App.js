@@ -2,19 +2,26 @@ import React, { Component } from 'react';
 import Search from './Search.js';
 import logo from './logo.svg';
 import './App.css';
+import AppBarMenu from './AppBarMenu';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import { deepOrange500 } from 'material-ui/styles/colors'
+
+// Theme
+const muiTheme = getMuiTheme({
+    palette: {
+        accent1Color: deepOrange500
+    }
+});
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          {/*<img src={logo} className="App-logo" alt="logo" />*/}
-          <h1 className="App-title">Spectrum</h1>
-            <h2 className="subtitle">Created by Mark Pfaff</h2>
-            <h2 className="subtitle">Powered by<a href="https://newsapi.org/"> News API </a></h2>
-        </header>
-        <Search default="abc-news"/>
-      </div>
+        <MuiThemeProvider theme={muiTheme}>
+            <div className="App">
+            <Search />
+          </div>
+        </MuiThemeProvider>
     );
   }
 }
