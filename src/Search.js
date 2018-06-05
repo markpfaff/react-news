@@ -5,7 +5,9 @@ import {Tabs,Tab} from 'material-ui/Tabs'
 import 'typeface-roboto'
 import Ionicon from 'react-ionicons'
 import './Search.css'
-import TextField from 'material-ui/TextField';
+import loading from './loading.svg'
+import logo from './logo.svg'
+import FlatButton from 'material-ui/FlatButton'
 
 const applyUpdateResult = (response) => (prevState) => ({
     data: [...prevState.data, ...response.data.articles],
@@ -19,28 +21,40 @@ const applySetResult = (response) => (prevState) => ({
 
 const all = {
     background: '#f5f5f5',
-    color: '#000000'
+    color: '#000000',
+    whiteSpace: 'normal',
+    wordWrap: 'break-word'
 };
 
 const farLeft = {
     background: '#263ebf',
-    color: '#ffffff'
+    color: '#ffffff',
+    whiteSpace: 'normal',
+    wordWrap: 'break-word'
 };
 const left = {
     background: '#673ab7',
-    color: '#ffffff'
+    color: '#ffffff',
+    whiteSpace: 'normal',
+    wordWrap: 'break-word'
 };
 const center = {
     background: '#9c27b0',
-    color: '#ffffff'
+    color: '#ffffff',
+    whiteSpace: 'normal',
+    wordWrap: 'break-word'
 };
 const right  ={
     background: '#b73a5d',
-    color: '#ffffff'
+    color: '#ffffff',
+    whiteSpace: 'normal',
+    wordWrap: 'break-word'
 };
 const farRight ={
     background: '#e42424',
-    color: '#ffffff'
+    color: '#ffffff',
+    whiteSpace: 'normal',
+    wordWrap: 'break-word'
 };
 
 const API_KEY = process.env.REACT_APP_NEWS_API_KEY;
@@ -57,6 +71,10 @@ class Search extends Component {
             domains:'',
             tabValue:'all',
         };
+    }
+
+    componentDidMount() {
+        this.fetchStories(this.state.inputValue, 1);
     }
 
     getNews = (value, page) => {
@@ -82,7 +100,7 @@ class Search extends Component {
                 sources = "";
         }
 
-        return  `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}${sources}&sortBy=publishedAt=&page=${page}&apiKey=${API_KEY}`;
+        return  `https://newsapi.org/v2/everything?q=${encodeURIComponent(value)}${sources}&language=en&sortBy=publishedAt&page=${page}&apiKey=${API_KEY}`;
 
 
     }
@@ -92,16 +110,15 @@ class Search extends Component {
         this.fetchStories(this.state.inputValue, 1);
     }
 
-
     handleChange = (value) => {
         this.setState({
             tabValue: value,
         });
-        console.log('handleChange has run, tabValue is', this.state.tabValue)
-        this.fetchStories(this.state.inputValue, this.state.page + 1);
+        console.log('handleChange has run, tabValue is', this.state.tabValue);
+        this.fetchStories(this.state.inputValue, 1);
         console.log('tabValue fetchstories has run');
-
     };
+
 
     onPaginatedSearch = (e) => {
         this.fetchStories(this.state.inputValue, this.state.page + 1);
@@ -159,11 +176,15 @@ class Search extends Component {
                     <header className="App-header">
                         {/*<AppBarMenu />*/}
                         {/*<img src={logo} className="App-logo" alt="logo" />*/}
-                            <h1 className="App-title">Spectrum</h1>
+                            <h1 className="App-title">
+                                <img src={logo} className="App-logo" alt="Spectrum Logo"/>
+                            </h1>
                             <div className="App-search">
-                                <form type="submit" onSubmit={this.onInitialSearch}>
+                                <form className="search-form" type="submit" onSubmit={this.onInitialSearch}>
                                     <input type="text" onChange={(e) => this.setState({inputValue: e.target.value})} value={this.state.inputValue} />
-                                    <button type="submit">Search</button>
+                                    <button className="search-button" type="submit">
+                                        <Ionicon icon="md-search" fontSize="25px" color="#ffffff" width="100%" textAlign="center" rotate={false}/>
+                                    </button>
                                 </form>
                             </div>
                         <div className="subtitle-container">
@@ -174,13 +195,14 @@ class Search extends Component {
                     <Tabs
                         value={this.state.value}
                         onChange={this.handleChange}
-
                     >
                         <Tab style={all} label="All" value='all'>
                             <div>
+                                <div className="loading-container">
                                     {this.state.isLoading &&
-                                    <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
+                                    <img src={loading} className="Loading" alt="Loading"/>
                                     }
+                                </div>
                                 <List
                                     list={this.state.data}
                                     isLoading={this.state.isLoading}
@@ -192,12 +214,15 @@ class Search extends Component {
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
-                                        <button
-                                            type="button"
+                                        <FlatButton
+                                            hoverColor='#333333'
+                                            rippleColor='#ffffff'
+                                            backgroundColor='#333333'
+                                            style={{color:'#ffffff'}}
                                             onClick={this.onPaginatedSearch}
                                         >
                                             More
-                                        </button>
+                                        </FlatButton>
                                     }
                                 </div>
                             </div>
@@ -205,9 +230,11 @@ class Search extends Component {
                         <Tab style={farLeft} value='far-left' label="Far Left" >
                             <div>
 
-                                {this.state.isLoading &&
-                                <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
-                                }
+                                <div className="loading-container">
+                                    {this.state.isLoading &&
+                                    <img src={loading} className="Loading" alt="Loading"/>
+                                    }
+                                </div>
                                 <List
                                     list={this.state.data}
                                     isLoading={this.state.isLoading}
@@ -220,12 +247,15 @@ class Search extends Component {
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
-                                        <button
-                                            type="button"
+                                        <FlatButton
+                                            hoverColor='#333333'
+                                            rippleColor='#ffffff'
+                                            backgroundColor='#333333'
+                                            style={{color:'#ffffff'}}
                                             onClick={this.onPaginatedSearch}
                                         >
                                             More
-                                        </button>
+                                        </FlatButton>
                                     }
                                 </div>
                             </div>
@@ -233,9 +263,11 @@ class Search extends Component {
                         <Tab style={left} label="Left" value='left' >
                             <div>
 
-                                {this.state.isLoading &&
-                                <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
-                                }
+                                <div className="loading-container">
+                                    {this.state.isLoading &&
+                                    <img src={loading} className="Loading" alt="Loading"/>
+                                    }
+                                </div>
                                 <List
                                     list={this.state.data}
                                     isLoading={this.state.isLoading}
@@ -248,12 +280,15 @@ class Search extends Component {
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
-                                        <button
-                                            type="button"
+                                        <FlatButton
+                                            hoverColor='#333333'
+                                            rippleColor='#ffffff'
+                                            backgroundColor='#333333'
+                                            style={{color:'#ffffff'}}
                                             onClick={this.onPaginatedSearch}
                                         >
                                             More
-                                        </button>
+                                        </FlatButton>
                                     }
                                 </div>
                             </div>
@@ -261,9 +296,11 @@ class Search extends Component {
                         <Tab style={center} label="center" value='center' >
                             <div>
 
-                                {this.state.isLoading &&
-                                <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
-                                }
+                                <div className="loading-container">
+                                    {this.state.isLoading &&
+                                    <img src={loading} className="Loading" alt="Loading"/>
+                                    }
+                                </div>
                                 <List
                                     list={this.state.data}
                                     isLoading={this.state.isLoading}
@@ -275,12 +312,15 @@ class Search extends Component {
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
-                                        <button
-                                            type="button"
+                                        <FlatButton
+                                            hoverColor='#333333'
+                                            rippleColor='#ffffff'
+                                            backgroundColor='#333333'
+                                            style={{color:'#ffffff'}}
                                             onClick={this.onPaginatedSearch}
                                         >
                                             More
-                                        </button>
+                                        </FlatButton>
                                     }
                                 </div>
                             </div>
@@ -288,9 +328,11 @@ class Search extends Component {
                         <Tab style={right} label="Right" value='right' >
                             <div>
 
-                                {this.state.isLoading &&
-                                <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
-                                }
+                                <div className="loading-container">
+                                    {this.state.isLoading &&
+                                    <img src={loading} className="Loading" alt="Loading"/>
+                                    }
+                                </div>
                                 <List
                                     list={this.state.data}
                                     isLoading={this.state.isLoading}
@@ -302,12 +344,15 @@ class Search extends Component {
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
-                                        <button
-                                            type="button"
+                                        <FlatButton
+                                            hoverColor='#333333'
+                                            rippleColor='#ffffff'
+                                            backgroundColor='#333333'
+                                            style={{color:'#ffffff'}}
                                             onClick={this.onPaginatedSearch}
                                         >
                                             More
-                                        </button>
+                                        </FlatButton>
                                     }
                                 </div>
                             </div>
@@ -315,9 +360,11 @@ class Search extends Component {
                         <Tab style={farRight} label="Far Right" value='far-right' >
                             <div>
 
-                                {this.state.isLoading &&
-                                <Ionicon icon="ios-ionic-outline" fontSize="60px" color="#347eff" width="100%" textAlign="center" rotate={true}/>
-                                }
+                                <div className="loading-container">
+                                    {this.state.isLoading &&
+                                    <img src={loading} className="Loading" alt="Loading"/>
+                                    }
+                                </div>
                                 <List
                                     list={this.state.data}
                                     isLoading={this.state.isLoading}
@@ -329,12 +376,15 @@ class Search extends Component {
                                 <div className="interactions">
                                     {
                                         (this.state.page !== null && !this.state.isLoading) &&
-                                        <button
-                                            type="button"
+                                        <FlatButton
+                                            hoverColor='#333333'
+                                            rippleColor='#ffffff'
+                                            backgroundColor='#333333'
+                                            style={{color:'#ffffff'}}
                                             onClick={this.onPaginatedSearch}
                                         >
                                             More
-                                        </button>
+                                        </FlatButton>
                                     }
                                 </div>
                             </div>

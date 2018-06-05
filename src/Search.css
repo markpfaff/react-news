@@ -21,13 +21,22 @@
 /*}*/
 
 
-.article-content a {
+a {
     text-decoration: none;
 }
 
+.article-image {
+    text-align: center;
+}
+
+.article-image img {
+    display: block;
+    margin: 0 auto;
+}
+
 .all .article-source {
-    background: none;
-    color: #000000;
+    background: #333333;
+    color: #ffffff;
 }
 
 .all .article-content a h4 {
@@ -39,7 +48,7 @@
 }
 
 .all .article-content a h4 {
-    color: #263ebf;
+    color: #333333;
 }
 
 .left .article-source {
@@ -76,3 +85,9 @@
 .far-right .article-content a h4 {
     color: #e42424;
 }
+
+.interactions {
+    text-align: center;
+    padding: 20px 0px;
+}
+

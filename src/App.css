@@ -3,22 +3,35 @@
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+  height: 60px;
+    width: 150px;
 }
 
+
+.Loading {
+    animation: Loading-spin infinite 2s linear;
+    margin: 20px auto;
+    width: 30px;
+}
+.loading-container {
+    text-align: center;
+}
 
 
 .App-header {
-  height: 30px;
-  padding: 5px 20px;
+  height: 65px;
+  padding: 0px 20px;
   color: #000000;
     text-align:left;
-    margin-bottom: 15px;
+    background: #333333;
+    display: flex;
 }
 
+
 .App-title {
-    font-size: 1.25em;
+    font-size: 1.75em;
+    padding: 0;
+    margin:0;
 }
 
 .App-title {
@@ -30,12 +43,16 @@
 .subtitle-container {
     float:right;
     margin-top: 15px;
-
+    margin-left: auto;
 }
 
 .subtitle {
     font-size: .75em;
     float:right;
+}
+
+.App-title, .subtitle, .subtitle a {
+    color: #ffffff;
 }
 
 .App-intro {
@@ -55,15 +72,22 @@
     margin-bottom: 10px;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
 img {
     max-width:150px;
 }
 
+.search-form {
+    display:flex;
+}
+
+.search-form input {
+    min-width:300px;
+}
+
+.search-button {
+    padding-top:2px;
+    background:transparent;
+}
 
 .article {
   display: flex;
@@ -90,6 +114,7 @@ img {
 
 }
 
+
 .article-meta {
     display: flex;
 }
@@ -110,6 +135,50 @@ img {
 
 .articlesContainer.all .article-source {
     color: #000000;
+}
+
+
+@media only screen and (max-width: 500px) {
+
+    .App-header {
+        display: block;
+    }
+
+    .article {
+        width: 95%;
+        padding: 0 10px;
+    }
+
+    .article-content, .article-image {
+        width:100%;
+    }
+    .App-title {
+        width: 30%;
+    }
+
+    .App-logo {
+        width: 100%;
+    }
+
+    .App-header {
+        padding: 0px 10px;
+    }
+
+    .App-search {
+        padding-left:5px;
+        float: right;
+        width: 60%;
+    }
+    .search-form input {
+        min-width:130px;
+        width: 130px;
+        font-size: 14px;
+    }
+
+    .subtitle-container {
+        display:none;
+    }
+
 }
 
 /*.articlesContainer {*/
